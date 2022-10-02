@@ -1,18 +1,21 @@
 import clsx from "clsx";
 import { HiPencil, HiTrash } from "react-icons/hi";
-import { TaskType } from "../pages/app";
+import { TaskAction, TaskType } from "../pages/app";
 import IconButton from "./IconButton";
 
 type TaskProps = {
   task: TaskType;
-};
+} & TaskAction;
 
-export const Task = ({ task }: TaskProps) => {
+export const Task = ({ task, actions: { toggleCompleted } }: TaskProps) => {
   return (
     <li className="bg-white p-4 rounded-md  flex items-center justify-between">
       <div className="flex items-center space-x-2">
         <input
           type="checkbox"
+          onChange={() => {
+            toggleCompleted(task.id, task.isCompleted);
+          }}
           checked={task.isCompleted}
           className="text-indigo-500 p-3 rounded-md transition-all duration-200 focus:ring-0"
         />

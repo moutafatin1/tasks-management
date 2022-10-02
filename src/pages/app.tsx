@@ -11,6 +11,12 @@ export type TaskType = {
   createdAt: string;
 };
 
+export type TaskAction = {
+  actions: {
+    toggleCompleted: (taskId: number, status: boolean) => void;
+  };
+};
+
 const AppPage = () => {
   const [tasks, setTasks] = useState<TaskType[]>([
     {
@@ -39,6 +45,17 @@ const AppPage = () => {
     setTasks((previousTasks) => [...previousTasks, newTask]);
   };
 
+  const toggleCompleted = (taskId: number, status: boolean) => {
+    const updatedTasks = tasks.map((task) => {
+      if (task.id == taskId) {
+        return { ...task, isCompleted: !status };
+      }
+      return task;
+    });
+
+    setTasks(() => [...updatedTasks]);
+  };
+
   return (
     <main className="h-screen  bg-slate-200">
       {/* Title */}
@@ -50,7 +67,10 @@ const AppPage = () => {
         {openModal && (
           <TaskModal setOpenModal={setOpenModal} addNewTask={addNewTask} />
         )}
-        <TaskList tasks={tasks} />
+        <TaskList
+          tasks={tasks}
+          actions={{toggleCompleted}}
+        />
       </div>
     </main>
   );

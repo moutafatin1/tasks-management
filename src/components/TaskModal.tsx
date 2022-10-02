@@ -12,10 +12,6 @@ type TaskModalProps = {
 
 const TaskModal = ({ setOpenModal, addNewTask }: TaskModalProps) => {
   const [taskText, setTaskText] = useState("");
-  console.log(
-    "🚀 ~ file: TaskModal.tsx ~ line 15 ~ TaskModal ~ taskText",
-    taskText
-  );
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
