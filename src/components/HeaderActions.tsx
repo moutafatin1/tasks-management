@@ -1,9 +1,14 @@
 import { Button } from ".";
 
-const HeaderActions = () => {
+type HeaderActionsProps = {
+  setOpenModal: (openModal: boolean) => void;
+  openModal: boolean;
+};
+
+const HeaderActions = ({ setOpenModal, openModal }: HeaderActionsProps) => {
   return (
     <div className="flex items-center justify-between">
-      <Button>Add Task</Button>
+      <Button onClick={() => setOpenModal(!openModal)}>Add Task</Button>
       <select
         name=""
         id=""
