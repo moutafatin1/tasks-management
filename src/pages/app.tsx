@@ -4,21 +4,6 @@ import HeaderActions from "../components/HeaderActions";
 import TaskModal from "../components/TaskModal";
 import { formatAMPM } from "../utils";
 
-const tasks: TaskType[] = [
-  {
-    id: 1,
-    task: "This is the first task",
-    isCompleted: true,
-    createdAt: `${formatAMPM(new Date())} ${new Date().toLocaleDateString()}`,
-  },
-  {
-    id: 2,
-    task: "This is the second task",
-    isCompleted: false,
-    createdAt: `${formatAMPM(new Date())} ${new Date().toLocaleDateString()}`,
-  },
-];
-
 export type TaskType = {
   id: number;
   task: string;
@@ -27,7 +12,33 @@ export type TaskType = {
 };
 
 const AppPage = () => {
+  const [tasks, setTasks] = useState<TaskType[]>([
+    {
+      id: 1,
+      task: "This is the first task",
+      isCompleted: true,
+      createdAt: `${formatAMPM(new Date())} ${new Date().toLocaleDateString()}`,
+    },
+    {
+      id: 2,
+      task: "This is the second task",
+      isCompleted: false,
+      createdAt: `${formatAMPM(new Date())} ${new Date().toLocaleDateString()}`,
+    },
+  ]);
   const [openModal, setOpenModal] = useState(true);
+
+  const addNewTask = (task: string) => {
+    const newTask: TaskType = {
+      id: Math.floor(Math.random() * 999),
+      task,
+      isCompleted: false,
+      createdAt: `${formatAMPM(new Date())} ${new Date().toLocaleDateString()}`,
+    };
+
+    setTasks((previousTasks) => [...previousTasks, newTask]);
+  };
+
   return (
     <main className="h-screen  bg-slate-200">
       {/* Title */}
@@ -36,7 +47,9 @@ const AppPage = () => {
           Tasks List
         </h1>
         <HeaderActions setOpenModal={setOpenModal} openModal={openModal} />
-        {openModal && <TaskModal setOpenModal={setOpenModal} />}
+        {openModal && (
+          <TaskModal setOpenModal={setOpenModal} addNewTask={addNewTask} />
+        )}
         <TaskList tasks={tasks} />
       </div>
     </main>
