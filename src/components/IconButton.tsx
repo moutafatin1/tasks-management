@@ -1,10 +1,13 @@
 type IconButtonProps = {
   children: React.ReactNode;
-};
+} & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-const IconButton = ({ children }: IconButtonProps) => {
+const IconButton = ({ children, ...props }: IconButtonProps) => {
   return (
-    <button className="bg-gray-200 p-2 rounded-md transition-all hover:bg-gray-300">
+    <button
+      {...props}
+      className="bg-gray-200 p-2 rounded-md transition-all hover:bg-gray-300"
+    >
       {children}
     </button>
   );

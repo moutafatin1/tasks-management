@@ -14,10 +14,25 @@ export type TaskType = {
 export type TaskAction = {
   actions: {
     toggleCompleted: (taskId: number, status: boolean) => void;
+    deleteTask: (taskId: number) => void;
+    openUpdateModal: (taskId: number) => void;
   };
 };
 
+export type ModalType = {
+  isOpen: boolean;
+  view: "create" | "update";
+  task?: TaskType;
+};
+
 const AppPage = () => {
+  const [openModal, setOpenModal] = useState<ModalType>({
+    isOpen: false,
+    view: "create",
+  });
+  const [taskText, setTaskText] = useState("");
+  const [taskId, setTaskId] = useState(0);
+
   const [tasks, setTasks] = useState<TaskType[]>([
     {
       id: 1,
@@ -32,17 +47,30 @@ const AppPage = () => {
       createdAt: `${formatAMPM(new Date())} ${new Date().toLocaleDateString()}`,
     },
   ]);
-  const [openModal, setOpenModal] = useState(true);
 
-  const addNewTask = (task: string) => {
+  const addNewTask = () => {
     const newTask: TaskType = {
       id: Math.floor(Math.random() * 999),
-      task,
+      task: taskText,
       isCompleted: false,
       createdAt: `${formatAMPM(new Date())} ${new Date().toLocaleDateString()}`,
     };
 
     setTasks((previousTasks) => [...previousTasks, newTask]);
+    setOpenModal((prevValue) => ({ ...prevValue, isOpen: false }));
+  };
+
+  const updateTask = () => {
+    const tasksUpdated = tasks.map((task) => {
+      if (task.id === taskId) {
+        task.task = taskText;
+      }
+      return task;
+    });
+
+    setTasks(tasksUpdated);
+
+    setOpenModal({ isOpen: false, view: "create" });
   };
 
   const toggleCompleted = (taskId: number, status: boolean) => {
@@ -55,6 +83,22 @@ const AppPage = () => {
 
     setTasks(() => [...updatedTasks]);
   };
+  const deleteTask = (taskId: number) => {
+    setTasks((prevTasks) => [
+      ...prevTasks.filter((task) => task.id !== taskId),
+    ]);
+    console.log("Deleted", taskId);
+  };
+
+  const openUpdateModal = (taskId: number) => {
+    const task = tasks.find((task) => task.id === taskId);
+    if (!task) {
+      throw new Error("Task not found");
+    }
+    setTaskText(task?.task);
+    setTaskId(task.id);
+    setOpenModal({ isOpen: true, view: "update" });
+  };
 
   return (
     <main className="h-screen  bg-slate-200">
@@ -63,13 +107,23 @@ const AppPage = () => {
         <h1 className="text-center font-bold  text-6xl p-10 text-gray-600">
           Tasks List
         </h1>
-        <HeaderActions setOpenModal={setOpenModal} openModal={openModal} />
-        {openModal && (
-          <TaskModal setOpenModal={setOpenModal} addNewTask={addNewTask} />
+        <HeaderActions
+          setOpenModal={setOpenModal}
+          openModal={openModal.isOpen}
+        />
+        {openModal.isOpen && (
+          <TaskModal
+            view={openModal.view}
+            setOpenModal={setOpenModal}
+            addNewTask={addNewTask}
+            updateTask={updateTask}
+            taskText={taskText}
+            setTaskText={setTaskText}
+          />
         )}
         <TaskList
           tasks={tasks}
-          actions={{toggleCompleted}}
+          actions={{ toggleCompleted, deleteTask, openUpdateModal }}
         />
       </div>
     </main>

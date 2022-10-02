@@ -7,7 +7,10 @@ type TaskProps = {
   task: TaskType;
 } & TaskAction;
 
-export const Task = ({ task, actions: { toggleCompleted } }: TaskProps) => {
+export const Task = ({
+  task,
+  actions: { toggleCompleted, deleteTask, openUpdateModal },
+}: TaskProps) => {
   return (
     <li className="bg-white p-4 rounded-md  flex items-center justify-between">
       <div className="flex items-center space-x-2">
@@ -33,10 +36,12 @@ export const Task = ({ task, actions: { toggleCompleted } }: TaskProps) => {
       </div>
       {/* Actions */}
       <div className="flex items-center space-x-2">
-        <IconButton>
+        {/* Delete */}
+        <IconButton onClick={() => deleteTask(task.id)}>
           <HiTrash className="text-gray-600" />
         </IconButton>
-        <IconButton>
+        {/* Update */}
+        <IconButton onClick={() => openUpdateModal(task.id)}>
           <HiPencil className="text-gray-600" />
         </IconButton>
       </div>

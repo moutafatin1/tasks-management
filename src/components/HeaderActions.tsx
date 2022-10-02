@@ -1,14 +1,18 @@
+import { Dispatch, SetStateAction } from "react";
 import { Button } from ".";
+import { ModalType } from "../pages/app";
 
 type HeaderActionsProps = {
-  setOpenModal: (openModal: boolean) => void;
+  setOpenModal: Dispatch<SetStateAction<ModalType>>;
   openModal: boolean;
 };
 
 const HeaderActions = ({ setOpenModal, openModal }: HeaderActionsProps) => {
   return (
     <div className="flex items-center justify-between">
-      <Button onClick={() => setOpenModal(!openModal)}>Add Task</Button>
+      <Button onClick={() => setOpenModal({ isOpen: true, view: "create" })}>
+        Add Task
+      </Button>
       <select
         name=""
         id=""
