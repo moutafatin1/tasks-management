@@ -22,7 +22,6 @@ export type TaskAction = {
 export type ModalType = {
   isOpen: boolean;
   view: "create" | "update";
-  task?: TaskType;
 };
 
 const AppPage = () => {
