@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { TaskList } from "../components";
 import HeaderActions from "../components/HeaderActions";
+import TaskModal from "../components/TaskModal";
 import { formatAMPM } from "../utils";
 
 const tasks: TaskType[] = [
@@ -25,6 +27,7 @@ export type TaskType = {
 };
 
 const AppPage = () => {
+  const [openModal, setOpenModal] = useState(true);
   return (
     <main className="h-screen  bg-slate-200">
       {/* Title */}
@@ -32,7 +35,8 @@ const AppPage = () => {
         <h1 className="text-center font-bold  text-6xl p-10 text-gray-600">
           Tasks List
         </h1>
-        <HeaderActions />
+        <HeaderActions setOpenModal={setOpenModal} openModal={openModal} />
+        {openModal && <TaskModal setOpenModal={setOpenModal} />}
         <TaskList tasks={tasks} />
       </div>
     </main>
