@@ -1,29 +1,28 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { BiTask } from "react-icons/bi";
 import { HiX } from "react-icons/hi";
-import { ModalType } from "../pages/app";
+import { ModalType, TaskType } from "../pages/app";
+import { Action, ActionKind } from "../utils";
 import { Button } from "./Button";
 
 import InputField from "./Form/InputField";
 
 type TaskModalProps = {
   setOpenModal: Dispatch<SetStateAction<ModalType>>;
-  addNewTask: () => void;
+  dispatch: Dispatch<Action>;
   view: "update" | "create";
-  taskText: string;
-  setTaskText: Dispatch<SetStateAction<string>>;
-  updateTask: () => void;
+  taskToUpdate?: TaskType;
 };
 
 const TaskModal = ({
   setOpenModal,
-  addNewTask,
-  taskText,
-  setTaskText,
-  updateTask,
+  dispatch,
   view,
+  taskToUpdate,
 }: TaskModalProps) => {
-  console.log("🚀 ~ file: TaskModal.tsx ~ line 23 ~ taskText", taskText);
+  const [taskText, setTaskText] = useState(
+    view === "update" && taskToUpdate ? taskToUpdate.task : ""
+  );
 
   return (
     <div className="absolute bg-black/50 inset-0 flex justify-center items-center ">
@@ -50,7 +49,10 @@ const TaskModal = ({
             <Button
               className="self-end mt-3
           "
-              onClick={addNewTask}
+              onClick={() => {
+                dispatch({ type: ActionKind.ADD, payload: { task: taskText } });
+                setOpenModal({ isOpen: false, view: "create" });
+              }}
             >
               Add
             </Button>
@@ -59,7 +61,16 @@ const TaskModal = ({
             <Button
               className="self-end mt-3
           "
-              onClick={updateTask}
+              onClick={() => {
+                dispatch({
+                  type: ActionKind.UPDATE,
+                  payload: {
+                    id: taskToUpdate?.id,
+                    task: taskText,
+                  },
+                });
+                setOpenModal((prevState) => ({ ...prevState, isOpen: false }));
+              }}
             >
               Update
             </Button>

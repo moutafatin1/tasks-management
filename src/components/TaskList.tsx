@@ -1,11 +1,15 @@
+import { Dispatch, SetStateAction } from "react";
 import { Task } from ".";
-import { TaskAction, TaskType } from "../pages/app";
+import { ModalType, TaskType } from "../pages/app";
+import { Action } from "../utils";
 
 type TasksListProps = {
   tasks: TaskType[];
-} & TaskAction;
+  setOpenModal: Dispatch<SetStateAction<ModalType>>;
+  dispatch: Dispatch<Action>;
+};
 
-export const TaskList = ({ tasks, actions }: TasksListProps) => {
+export const TaskList = ({ tasks, dispatch,setOpenModal }: TasksListProps) => {
   return (
     <div className="mt-5">
       {tasks.length == 0 ? (
@@ -13,7 +17,7 @@ export const TaskList = ({ tasks, actions }: TasksListProps) => {
       ) : (
         <ul className="bg-gray-300 rounded-xl p-6 space-y-4">
           {tasks.map((task) => (
-            <Task key={task.id} task={task} actions={actions} />
+            <Task key={task.id} task={task} dispatch={dispatch} setOpenModal={setOpenModal} />
           ))}
         </ul>
       )}

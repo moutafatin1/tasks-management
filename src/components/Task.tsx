@@ -1,24 +1,28 @@
 import clsx from "clsx";
+import { Dispatch, SetStateAction } from "react";
 import { HiPencil, HiTrash } from "react-icons/hi";
-import { TaskAction, TaskType } from "../pages/app";
+import { ModalType, TaskType } from "../pages/app";
+import { Action, ActionKind } from "../utils";
 import IconButton from "./IconButton";
 
 type TaskProps = {
   task: TaskType;
-} & TaskAction;
+  dispatch: Dispatch<Action>;
+  setOpenModal: Dispatch<SetStateAction<ModalType>>;
+};
 
-export const Task = ({
-  task,
-  actions: { toggleCompleted, deleteTask, openUpdateModal },
-}: TaskProps) => {
+export const Task = ({ task, dispatch, setOpenModal }: TaskProps) => {
   return (
     <li className="bg-white p-4 rounded-md  flex items-center justify-between">
       <div className="flex items-center space-x-2">
         <input
           type="checkbox"
-          onChange={() => {
-            toggleCompleted(task.id, task.isCompleted);
-          }}
+          onChange={() =>
+            dispatch({
+              type: ActionKind.TOGGLE_COMPLETED,
+              payload: { id: task.id, status: !task.isCompleted },
+            })
+          }
           checked={task.isCompleted}
           className="text-indigo-500 p-3 rounded-md transition-all duration-200 focus:ring-0"
         />
@@ -37,11 +41,17 @@ export const Task = ({
       {/* Actions */}
       <div className="flex items-center space-x-2">
         {/* Delete */}
-        <IconButton onClick={() => deleteTask(task.id)}>
+        <IconButton
+          onClick={() =>
+            dispatch({ type: ActionKind.DELETE, payload: { id: task.id } })
+          }
+        >
           <HiTrash className="text-gray-600" />
         </IconButton>
         {/* Update */}
-        <IconButton onClick={() => openUpdateModal(task.id)}>
+        <IconButton
+          onClick={() => setOpenModal({ isOpen: true, view: "update", task })}
+        >
           <HiPencil className="text-gray-600" />
         </IconButton>
       </div>
