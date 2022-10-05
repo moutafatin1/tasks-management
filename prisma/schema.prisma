@@ -18,6 +18,17 @@ model Example {
     id String @id @default(cuid())
 }
 
+model Task {
+    id          String   @id @default(cuid())
+    body        String
+    isCompleted Boolean
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    userId      String
+    
+    user        User     @relation(fields: [userId], references: [id])
+}
+
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
@@ -53,6 +64,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    Task          Task[]
 }
 
 model VerificationToken {
