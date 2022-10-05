@@ -1,12 +1,11 @@
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
+import { signIn } from "next-auth/react";
 import Head from "next/head";
 import Image from "next/image";
 import { Button } from "../components";
-import { trpc } from "../utils/trpc";
+import { getServerAuthSession } from "../server/common/get-server-auth-session";
 
 const Home: NextPage = () => {
-  const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
-
   return (
     <>
       <Head>
@@ -15,7 +14,10 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="h-screen bg-slate-500 ">
-        <Button className="absolute right-0 m-3 bg-emerald-600 hover:bg-emerald-700">
+        <Button
+          onClick={() => signIn("github")}
+          className="absolute right-0 m-3 bg-emerald-600 hover:bg-emerald-700"
+        >
           Login With Github
         </Button>
 
@@ -38,6 +40,23 @@ const Home: NextPage = () => {
       </main>
     </>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+  if (session) {
+    return {
+      redirect: {
+        destination: "/app",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {
+      session,
+    },
+  };
 };
 
 export default Home;

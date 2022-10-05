@@ -1,7 +1,10 @@
+import { GetServerSideProps } from "next";
+import { useSession } from "next-auth/react";
 import { useReducer, useState } from "react";
 import { TaskList } from "../components";
 import HeaderActions from "../components/HeaderActions";
 import TaskModal from "../components/TaskModal";
+import { getServerAuthSession } from "../server/common/get-server-auth-session";
 import { data, reducer } from "../utils";
 
 export type TaskType = {
@@ -23,6 +26,9 @@ const AppPage = () => {
     isOpen: false,
     view: "create",
   });
+
+  const { data: session } = useSession();
+  console.log("🚀 ~ file: app.tsx ~ line 29 ~ AppPage ~ session", session);
 
   return (
     <main className="h-screen  bg-slate-200">
@@ -55,3 +61,20 @@ const AppPage = () => {
 };
 
 export default AppPage;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {
+      session,
+    },
+  };
+};
