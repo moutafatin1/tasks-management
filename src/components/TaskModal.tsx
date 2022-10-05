@@ -18,9 +18,7 @@ const TaskModal = ({ setOpenModal, view, taskToUpdate }: TaskModalProps) => {
   const [taskText, setTaskText] = useState(
     view === "update" && taskToUpdate ? taskToUpdate.body : ""
   );
-  if (!taskToUpdate) {
-    return <h1>Error</h1>;
-  }
+
   const utils = trpc.useContext();
   const addTask = trpc.tasks.add.useMutation({
     async onSuccess() {
@@ -73,7 +71,7 @@ const TaskModal = ({ setOpenModal, view, taskToUpdate }: TaskModalProps) => {
               onClick={() => {
                 updateTask.mutateAsync({
                   body: taskText,
-                  id: taskToUpdate?.id,
+                  id: taskToUpdate?.id ?? "",
                 });
                 setOpenModal((prevState) => ({ ...prevState, isOpen: false }));
               }}
