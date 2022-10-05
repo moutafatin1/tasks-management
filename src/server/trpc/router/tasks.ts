@@ -31,4 +31,42 @@ export const tasksRouter = t.router({
       });
       return task;
     }),
+
+  toggleIsCompleted: authedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        status: z.boolean(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const updateTask = ctx.prisma.task.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          isCompleted: !input.status,
+        },
+      });
+      return updateTask;
+    }),
+
+  update: authedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        body: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const updateTask = ctx.prisma.task.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          body: input.body,
+        },
+      });
+      return updateTask;
+    }),
 });

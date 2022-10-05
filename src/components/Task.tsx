@@ -19,17 +19,20 @@ export const Task = ({ task, setOpenModal }: TaskProps) => {
     },
   });
 
+  const toggleStatus = trpc.tasks.toggleIsCompleted.useMutation({
+    async onSuccess() {
+      await utils.tasks.all.invalidate();
+    },
+  });
+
   return (
     <li className="bg-white p-4 rounded-md  flex items-center justify-between">
       <div className="flex items-center space-x-2">
         <input
           type="checkbox"
-          // onChange={() =>
-          //   dispatch({
-          //     type: ActionKind.TOGGLE_COMPLETED,
-          //     payload: { id: task.id, status: !task.isCompleted },
-          //   })
-          // }
+          onChange={() => {
+            toggleStatus.mutateAsync({ id: task.id, status: task.isCompleted });
+          }}
           checked={task.isCompleted}
           className="text-indigo-500 p-3 rounded-md transition-all duration-200 focus:ring-0"
         />
@@ -59,7 +62,7 @@ export const Task = ({ task, setOpenModal }: TaskProps) => {
         </IconButton>
         {/* Update */}
         <IconButton
-        // onClick={() => setOpenModal({ isOpen: true, view: "update", task })}
+          onClick={() => setOpenModal({ isOpen: true, view: "update", task })}
         >
           <HiPencil className="text-gray-600" />
         </IconButton>

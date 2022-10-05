@@ -18,8 +18,16 @@ const TaskModal = ({ setOpenModal, view, taskToUpdate }: TaskModalProps) => {
   const [taskText, setTaskText] = useState(
     view === "update" && taskToUpdate ? taskToUpdate.body : ""
   );
+  if (!taskToUpdate) {
+    return <h1>Error</h1>;
+  }
   const utils = trpc.useContext();
   const addTask = trpc.tasks.add.useMutation({
+    async onSuccess() {
+      await utils.tasks.all.invalidate();
+    },
+  });
+  const updateTask = trpc.tasks.update.useMutation({
     async onSuccess() {
       await utils.tasks.all.invalidate();
     },
@@ -62,16 +70,13 @@ const TaskModal = ({ setOpenModal, view, taskToUpdate }: TaskModalProps) => {
             <Button
               className="self-end mt-3
           "
-              // onClick={() => {
-              //   dispatch({
-              //     type: ActionKind.UPDATE,
-              //     payload: {
-              //       id: taskToUpdate?.id,
-              //       task: taskText,
-              //     },
-              //   });
-              //   setOpenModal((prevState) => ({ ...prevState, isOpen: false }));
-              // }}
+              onClick={() => {
+                updateTask.mutateAsync({
+                  body: taskText,
+                  id: taskToUpdate?.id,
+                });
+                setOpenModal((prevState) => ({ ...prevState, isOpen: false }));
+              }}
             >
               Update
             </Button>
