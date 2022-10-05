@@ -24,46 +24,6 @@ const AppPage = () => {
     view: "create",
   });
 
-  // const updateTask = () => {
-  //   const tasksUpdated = tasks.map((task) => {
-  //     if (task.id === taskId) {
-  //       task.task = taskText;
-  //     }
-  //     return task;
-  //   });
-
-  //   setTasks(tasksUpdated);
-
-  //   setOpenModal({ isOpen: false, view: "create" });
-  // };
-
-  // const toggleCompleted = (taskId: number, status: boolean) => {
-  //   const updatedTasks = tasks.map((task) => {
-  //     if (task.id == taskId) {
-  //       return { ...task, isCompleted: !status };
-  //     }
-  //     return task;
-  //   });
-
-  //   setTasks(() => [...updatedTasks]);
-  // };
-  // const deleteTask = (taskId: number) => {
-  //   setTasks((prevTasks) => [
-  //     ...prevTasks.filter((task) => task.id !== taskId),
-  //   ]);
-  //   console.log("Deleted", taskId);
-  // };
-
-  // const openUpdateModal = (taskId: number) => {
-  //   const task = tasks.find((task) => task.id === taskId);
-  //   if (!task) {
-  //     throw new Error("Task not found");
-  //   }
-  //   setTaskText(task?.task);
-  //   setTaskId(task.id);
-  //   setOpenModal({ isOpen: true, view: "update" });
-  // };
-
   return (
     <main className="h-screen  bg-slate-200">
       {/* Title */}
@@ -84,7 +44,11 @@ const AppPage = () => {
             taskToUpdate={openModal.task}
           />
         )}
-        <TaskList tasks={tasks} dispatch={dispatch} setOpenModal={setOpenModal} />
+        <TaskList
+          tasks={tasks}
+          dispatch={dispatch}
+          setOpenModal={setOpenModal}
+        />
       </div>
     </main>
   );
