@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { Dispatch, SetStateAction } from "react";
 import { HiPencil, HiTrash } from "react-icons/hi";
 import { ModalType } from "../pages/app";
+import { trpc } from "../utils/trpc";
 import IconButton from "./IconButton";
 
 type TaskProps = {
@@ -11,6 +12,13 @@ type TaskProps = {
 };
 
 export const Task = ({ task, setOpenModal }: TaskProps) => {
+  const utils = trpc.useContext();
+  const deleteTask = trpc.tasks.delete.useMutation({
+    async onSuccess() {
+      await utils.tasks.all.invalidate();
+    },
+  });
+
   return (
     <li className="bg-white p-4 rounded-md  flex items-center justify-between">
       <div className="flex items-center space-x-2">
@@ -43,9 +51,9 @@ export const Task = ({ task, setOpenModal }: TaskProps) => {
       <div className="flex items-center space-x-2">
         {/* Delete */}
         <IconButton
-        // onClick={() =>
-        //   dispatch({ type: ActionKind.DELETE, payload: { id: task.id } })
-        // }
+          onClick={() => {
+            deleteTask.mutateAsync({ id: task.id });
+          }}
         >
           <HiTrash className="text-gray-600" />
         </IconButton>

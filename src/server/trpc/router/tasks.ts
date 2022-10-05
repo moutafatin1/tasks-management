@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { t } from "../trpc";
 import { authedProcedure } from "./../trpc";
 
@@ -8,4 +9,13 @@ export const tasksRouter = t.router({
       tasks,
     };
   }),
+  delete: authedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.task.delete({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
 });
