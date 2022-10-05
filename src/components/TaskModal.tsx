@@ -1,27 +1,21 @@
+import { Task } from "@prisma/client";
 import { Dispatch, SetStateAction, useState } from "react";
 import { BiTask } from "react-icons/bi";
 import { HiX } from "react-icons/hi";
-import { ModalType, TaskType } from "../pages/app";
-import { Action, ActionKind } from "../utils";
+import { ModalType } from "../pages/app";
 import { Button } from "./Button";
 
 import InputField from "./Form/InputField";
 
 type TaskModalProps = {
   setOpenModal: Dispatch<SetStateAction<ModalType>>;
-  dispatch: Dispatch<Action>;
   view: "update" | "create";
-  taskToUpdate?: TaskType;
+  taskToUpdate?: Task;
 };
 
-const TaskModal = ({
-  setOpenModal,
-  dispatch,
-  view,
-  taskToUpdate,
-}: TaskModalProps) => {
+const TaskModal = ({ setOpenModal, view, taskToUpdate }: TaskModalProps) => {
   const [taskText, setTaskText] = useState(
-    view === "update" && taskToUpdate ? taskToUpdate.task : ""
+    view === "update" && taskToUpdate ? taskToUpdate.body : ""
   );
 
   return (
@@ -49,10 +43,10 @@ const TaskModal = ({
             <Button
               className="self-end mt-3
           "
-              onClick={() => {
-                dispatch({ type: ActionKind.ADD, payload: { task: taskText } });
-                setOpenModal({ isOpen: false, view: "create" });
-              }}
+              // onClick={() => {
+              //   dispatch({ type: ActionKind.ADD, payload: { task: taskText } });
+              //   setOpenModal({ isOpen: false, view: "create" });
+              // }}
             >
               Add
             </Button>
@@ -61,16 +55,16 @@ const TaskModal = ({
             <Button
               className="self-end mt-3
           "
-              onClick={() => {
-                dispatch({
-                  type: ActionKind.UPDATE,
-                  payload: {
-                    id: taskToUpdate?.id,
-                    task: taskText,
-                  },
-                });
-                setOpenModal((prevState) => ({ ...prevState, isOpen: false }));
-              }}
+              // onClick={() => {
+              //   dispatch({
+              //     type: ActionKind.UPDATE,
+              //     payload: {
+              //       id: taskToUpdate?.id,
+              //       task: taskText,
+              //     },
+              //   });
+              //   setOpenModal((prevState) => ({ ...prevState, isOpen: false }));
+              // }}
             >
               Update
             </Button>

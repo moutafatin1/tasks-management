@@ -6,3 +6,4 @@ export * from "./IconButton";
 export * from "./Task";
 export * from "./TaskList";
 export * from "./TaskModal";
+export * from "./User";

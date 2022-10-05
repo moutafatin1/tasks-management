@@ -1,15 +1,14 @@
+import { Task as TaskType } from "@prisma/client";
 import { Dispatch, SetStateAction } from "react";
-import { Task } from ".";
-import { ModalType, TaskType } from "../pages/app";
-import { Action } from "../utils";
+import { ModalType } from "../pages/app";
+import { Task } from "./Task";
 
 type TasksListProps = {
-  tasks: TaskType[];
   setOpenModal: Dispatch<SetStateAction<ModalType>>;
-  dispatch: Dispatch<Action>;
+  tasks: Array<TaskType>;
 };
 
-export const TaskList = ({ tasks, dispatch,setOpenModal }: TasksListProps) => {
+export const TaskList = ({ setOpenModal, tasks }: TasksListProps) => {
   return (
     <div className="mt-5">
       {tasks.length == 0 ? (
@@ -17,7 +16,7 @@ export const TaskList = ({ tasks, dispatch,setOpenModal }: TasksListProps) => {
       ) : (
         <ul className="bg-gray-300 rounded-xl p-6 space-y-4">
           {tasks.map((task) => (
-            <Task key={task.id} task={task} dispatch={dispatch} setOpenModal={setOpenModal} />
+            <Task key={task.id} task={task} setOpenModal={setOpenModal} />
           ))}
         </ul>
       )}
