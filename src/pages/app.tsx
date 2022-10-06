@@ -13,13 +13,12 @@ export type ModalType = {
 };
 
 const AppPage = () => {
-  // const [tasks, dispatch] = useReducer(reducer, data);
   const [openModal, setOpenModal] = useState<ModalType>({
     isOpen: false,
     view: "create",
   });
   const [filter, setFilter] = useState<string | null>(null);
-  console.log("🚀 ~ file: app.tsx ~ line 22 ~ AppPage ~ filter", filter);
+
   const { data, error, status } = trpc.tasks.all.useQuery({
     status:
       filter === "completed" ? true : filter === "incomplete" ? false : null,
