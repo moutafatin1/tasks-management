@@ -9,6 +9,14 @@ export const tasksRouter = t.router({
       tasks,
     };
   }),
+  byId: authedProcedure.input(z.string()).query(({ ctx, input }) => {
+    const task = ctx.prisma.task.findUnique({
+      where: {
+        id: input,
+      },
+    });
+    return task;
+  }),
   delete: authedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
