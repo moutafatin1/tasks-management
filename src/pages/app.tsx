@@ -1,11 +1,9 @@
 import { Task } from "@prisma/client";
-import { GetServerSideProps } from "next";
 import { useState } from "react";
 import { TaskList } from "../components";
 import HeaderActions from "../components/HeaderActions";
 import TaskModal from "../components/TaskModal";
 import User from "../components/User";
-import { getServerAuthSession } from "../server/common/get-server-auth-session";
 import { trpc } from "../utils/trpc";
 
 export type ModalType = {
@@ -20,7 +18,12 @@ const AppPage = () => {
     isOpen: false,
     view: "create",
   });
-  const { data, error, status } = trpc.tasks.all.useQuery();
+  const [filter, setFilter] = useState<string | null>(null);
+  console.log("🚀 ~ file: app.tsx ~ line 22 ~ AppPage ~ filter", filter);
+  const { data, error, status } = trpc.tasks.all.useQuery({
+    status:
+      filter === "completed" ? true : filter === "incomplete" ? false : null,
+  });
   if (error) {
     return <h1 className="text-red-500">{error.message}</h1>;
   }
@@ -43,6 +46,8 @@ const AppPage = () => {
         <HeaderActions
           setOpenModal={setOpenModal}
           openModal={openModal.isOpen}
+          setFilter={setFilter}
+          filter={filter}
         />
         {openModal.isOpen && (
           <TaskModal
@@ -58,20 +63,3 @@ const AppPage = () => {
 };
 
 export default AppPage;
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getServerAuthSession(ctx);
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-  return {
-    props: {
-      session,
-    },
-  };
-};

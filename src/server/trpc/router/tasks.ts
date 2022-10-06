@@ -3,12 +3,24 @@ import { t } from "../trpc";
 import { authedProcedure } from "./../trpc";
 
 export const tasksRouter = t.router({
-  all: authedProcedure.query(async ({ ctx: { prisma, session } }) => {
-    const tasks = await prisma.task.findMany();
-    return {
-      tasks,
-    };
-  }),
+  all: authedProcedure
+    .input(
+      z
+        .object({
+          status: z.boolean().nullable(),
+        })
+        .nullish()
+    )
+    .query(async ({ ctx: { prisma, session }, input }) => {
+      const tasks = await prisma.task.findMany({
+        where: {
+          ...(input?.status !== null ? { isCompleted: input?.status } : {}),
+        },
+      });
+      return {
+        tasks,
+      };
+    }),
   byId: authedProcedure.input(z.string()).query(({ ctx, input }) => {
     const task = ctx.prisma.task.findUnique({
       where: {
