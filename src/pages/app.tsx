@@ -3,7 +3,6 @@ import { GetServerSideProps } from "next";
 import { useState } from "react";
 import { TaskList } from "../components";
 import HeaderActions from "../components/HeaderActions";
-import KanbanBoard from "../components/KanbanBoard";
 import TaskModal from "../components/TaskModal";
 import User from "../components/User";
 import { getServerAuthSession } from "../server/common/get-server-auth-session";
@@ -17,7 +16,6 @@ export type ModalType = {
 
 const AppPage = () => {
   // const [tasks, dispatch] = useReducer(reducer, data);
-  const [isKanban, setIsKanban] = useState(false);
   const [openModal, setOpenModal] = useState<ModalType>({
     isOpen: false,
     view: "create",
@@ -43,8 +41,6 @@ const AppPage = () => {
           <User />
         </div>
         <HeaderActions
-          isKanban={isKanban}
-          setIsKanban={setIsKanban}
           setOpenModal={setOpenModal}
           openModal={openModal.isOpen}
         />
@@ -55,11 +51,7 @@ const AppPage = () => {
             taskToUpdate={openModal.task}
           />
         )}
-        {!isKanban ? (
-          <TaskList tasks={data.tasks} setOpenModal={setOpenModal} />
-        ) : (
-          <KanbanBoard tasks={data.tasks} />
-        )}
+        <TaskList tasks={data.tasks} setOpenModal={setOpenModal} />
       </div>
     </main>
   );
