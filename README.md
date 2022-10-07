@@ -1,5 +1,5 @@
 Yo,
-The goals of creating this project is to try the t3 stack, Trpc/NextJs/NextAuth/TailwindCss + Typscript.
+The goal of creating this project is to try the t3 stack, Trpc/NextJs/NextAuth/TailwindCss + Typscript.
 Features : 
 * Login/Logout
 * Add/Delete/Update Tasks
